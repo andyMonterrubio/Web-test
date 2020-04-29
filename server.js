@@ -12,6 +12,8 @@ app.use(express.static(__dirname + '/public'));
 app.get('/api/search/:text', async (req, res) => {
   const { text } = req.params;
   const result = [];
+
+  //TV MAZE API
   const response = await fetch(`http://api.tvmaze.com/search/shows?q=${text}`);
   const items = await response.json();
   _.each(items, (item, i) => {
@@ -19,14 +21,12 @@ app.get('/api/search/:text', async (req, res) => {
     if( item.show.image != null){
       img = item.show.image.medium
     }
-    console.log(img)
     const data = {
       id: item.show.id,
       name: item.show.name,
       type: 'https://cdn3.iconfinder.com/data/icons/computer-and-gadgets-icon-set/50/tv-512.png',
       img: img
     }
-    //console.log(data)
     result.push(data)
   });
   res.json(result)
