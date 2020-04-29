@@ -608,6 +608,10 @@ var _superagent = __webpack_require__(43);
 
 var _superagent2 = _interopRequireDefault(_superagent);
 
+var _Spinner = __webpack_require__(19);
+
+var _Spinner2 = _interopRequireDefault(_Spinner);
+
 __webpack_require__(39);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -622,6 +626,11 @@ var App = function App() {
         _useState4 = _slicedToArray(_useState3, 2),
         items = _useState4[0],
         setItems = _useState4[1];
+
+    var _useState5 = (0, _react.useState)(false),
+        _useState6 = _slicedToArray(_useState5, 2),
+        show = _useState6[0],
+        setShow = _useState6[1];
 
     function compare(a, b) {
         // Use toUpperCase() to ignore character casing
@@ -638,13 +647,13 @@ var App = function App() {
     }
 
     var searchItems = function searchItems(text) {
-        console.log(text);
         setLoading(true);
         _superagent2.default.get('http://localhost:3000/api/search/' + text).end(function (err, res) {
             var items = res.body;
-            console.log(items);
-            items = items.sort(compare);
-            console.log(items);
+            if (items != null) {
+                items = items.sort(compare);
+            }
+            setShow(true);
             setItems(items);
             setLoading(false);
         });
@@ -658,7 +667,8 @@ var App = function App() {
             'div',
             { className: 'container' },
             _react2.default.createElement(_Search2.default, { searchItems: searchItems }),
-            _react2.default.createElement(_Elements2.default, { loading: loading, elements: items })
+            loading && _react2.default.createElement(_Spinner2.default, null),
+            show && _react2.default.createElement(_Elements2.default, { elements: items })
         )
     );
 };
@@ -1448,10 +1458,6 @@ var _Item = __webpack_require__(16);
 
 var _Item2 = _interopRequireDefault(_Item);
 
-var _Spinner = __webpack_require__(19);
-
-var _Spinner2 = _interopRequireDefault(_Spinner);
-
 var _propTypes = __webpack_require__(5);
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
@@ -1459,31 +1465,36 @@ var _propTypes2 = _interopRequireDefault(_propTypes);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var Elements = function Elements(_ref) {
-    var elements = _ref.elements,
-        loading = _ref.loading;
+    var elements = _ref.elements;
 
-    if (loading) {
-        return _react2.default.createElement(_Spinner2.default, null);
-    } else {
-        return _react2.default.createElement(
+    return _react2.default.createElement(
+        _react2.default.Fragment,
+        null,
+        elements.length > 0 ? _react2.default.createElement(
             'div',
-            { style: elementStyle },
+            { className: 'grid-3' },
             elements.map(function (item) {
                 return _react2.default.createElement(_Item2.default, { key: item.id, item: item });
             })
-        );
-    }
+        ) : _react2.default.createElement(
+            'div',
+            { className: 'noData' },
+            _react2.default.createElement(
+                'h2',
+                null,
+                'No data was found'
+            ),
+            _react2.default.createElement(
+                'p',
+                null,
+                'Try a different search criteria'
+            )
+        )
+    );
 };
 
 Elements.propTypes = {
-    elements: _propTypes2.default.array.isRequired,
-    loading: _propTypes2.default.bool.isRequired
-};
-
-var elementStyle = {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(3, 1fr)',
-    gridGap: '1rem'
+    elements: _propTypes2.default.array.isRequired
 };
 
 exports.default = Elements;
@@ -1577,8 +1588,13 @@ var Search = function Search(props) {
             'form',
             { onSubmit: onSubmit, className: 'form' },
             _react2.default.createElement('input', { type: 'text', name: 'text', placeholder: 'Search Element...', value: text,
-                onChange: onChange }),
-            _react2.default.createElement('input', { type: 'submit', value: 'Search', className: 'btn btn-dark btn-block' })
+                onChange: onChange, required: true }),
+            _react2.default.createElement(
+                'button',
+                { type: 'submit', value: 'Search', className: 'btn btn-dark btn-block' },
+                _react2.default.createElement('i', { className: 'fas fa-search' }),
+                '\u2003Search'
+            )
         )
     );
 };
@@ -1879,7 +1895,7 @@ var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(23);
 exports = ___CSS_LOADER_API_IMPORT___(false);
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Roboto);"]);
 // Module
-exports.push([module.i, "/* Global Styles */\n:root {\n  --primary-color: #dc3545;\n  --dark-color: #333333;\n  --light-color: #f4f4f4;\n  --danger-color: #dc3545;\n  --success-color: #28a745;\n}\n\n* {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  font-family: 'Roboto', sans-serif;\n  font-size: 1rem;\n  line-height: 1.6;\n  background-color: #fff;\n  color: #333;\n}\n\na {\n  color: var(--primary-color);\n  text-decoration: none;\n}\n\na:hover {\n  color: #666;\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  width: 100%;\n}\n\n/* Utilities */\n.container {\n  max-width: 1100px;\n  margin: auto;\n  overflow: hidden;\n  padding: 0 2rem;\n}\n\n/* Text Styles*/\n.x-large {\n  font-size: 4rem;\n  line-height: 1.2;\n  margin-bottom: 1rem;\n}\n\n.large {\n  font-size: 3rem;\n  line-height: 1.2;\n  margin-bottom: 1rem;\n}\n\n.lead {\n  font-size: 1.5rem;\n  margin-bottom: 1rem;\n}\n\n.text-center {\n  text-align: center;\n}\n\n.text-primary {\n  color: var(--primary-color);\n}\n\n.text-dark {\n  color: var(--dark-color);\n}\n\n.text-success {\n  color: var(--success-color);\n}\n\n.text-danger {\n  color: var(--danger-color);\n}\n\n.text-center {\n  text-align: center;\n}\n\n.text-right {\n  text-align: right;\n}\n\n.text-left {\n  text-align: left;\n}\n\n/* Center All */\n.all-center {\n  display: flex;\n  flex-direction: column;\n  width: 100%;\n  margin: auto;\n  justify-content: center;\n  align-items: center;\n  text-align: center;\n}\n\n/* Cards */\n.card {\n  padding: 1rem;\n  border: #ccc 1px dotted;\n  margin: 0.7rem 0;\n}\n\n/* List */\n.list {\n  margin: 0.5rem 0;\n}\n\n.list li {\n  padding-bottom: 0.3rem;\n}\n\n/* Padding */\n.p {\n  padding: 0.5rem;\n}\n.p-1 {\n  padding: 1rem;\n}\n.p-2 {\n  padding: 2rem;\n}\n.p-3 {\n  padding: 3rem;\n}\n.py {\n  padding: 0.5rem 0;\n}\n.py-1 {\n  padding: 1rem 0;\n}\n.py-2 {\n  padding: 2rem 0;\n}\n.py-3 {\n  padding: 3rem 0;\n}\n\n/* Margin */\n.m {\n  margin: 0.5rem;\n}\n.m-1 {\n  margin: 1rem;\n}\n.m-2 {\n  margin: 2rem;\n}\n.m-3 {\n  margin: 3rem;\n}\n.my {\n  margin: 0.5rem 0;\n}\n.my-1 {\n  margin: 1rem 0;\n}\n.my-2 {\n  margin: 2rem 0;\n}\n.my-3 {\n  margin: 3rem 0;\n}\n\n/* Grid */\n.grid-2 {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  grid-gap: 1rem;\n}\n\n.grid-3 {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  grid-gap: 1rem;\n}\n\n.grid-4 {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  grid-gap: 1rem;\n}\n\n.btn {\n  display: inline-block;\n  background: var(--light-color);\n  color: #333;\n  padding: 0.4rem 1.3rem;\n  font-size: 1rem;\n  border: none;\n  cursor: pointer;\n  margin-right: 0.5rem;\n  transition: opacity 0.2s ease-in;\n  outline: none;\n}\n\n.btn-link {\n  background: none;\n  padding: 0;\n  margin: 0;\n}\n\n.btn-block {\n  display: block;\n  width: 100%;\n}\n\n.btn-sm {\n  font-size: 0.8rem;\n  padding: 0.3rem 1rem;\n  margin-right: 0.2rem;\n}\n\n.badge {\n  display: inline-block;\n  font-size: 0.8rem;\n  padding: 0.2rem 0.7rem;\n  text-align: center;\n  margin: 0.3rem;\n  background: var(--light-color);\n  color: #333;\n  border-radius: 5px;\n}\n\n.alert {\n  padding: 0.7rem;\n  margin: 1rem 0;\n  opacity: 0.9;\n  background: var(--light-color);\n  color: #333;\n}\n\n.btn-primary,\n.bg-primary,\n.badge-primary,\n.alert-primary {\n  background: var(--primary-color);\n  color: #fff;\n}\n\n.btn-light,\n.bg-light,\n.badge-light,\n.alert-light {\n  background: var(--light-color);\n  color: #333;\n}\n\n.btn-dark,\n.bg-dark,\n.badge-dark,\n.alert-dark {\n  background: var(--dark-color);\n  color: #fff;\n}\n\n.btn-danger,\n.bg-danger,\n.badge-danger,\n.alert-danger {\n  background: var(--danger-color);\n  color: #fff;\n}\n\n.btn-success,\n.bg-success,\n.badge-success,\n.alert-success {\n  background: var(--success-color);\n  color: #fff;\n}\n\n.btn-white,\n.bg-white,\n.badge-white,\n.alert-white {\n  background: #fff;\n  color: #333;\n  border: #ccc solid 1px;\n}\n\n.btn:hover {\n  opacity: 0.8;\n}\n\n.bg-light,\n.badge-light {\n  border: #ccc solid 1px;\n}\n\n.round-img {\n  border-radius: 50%;\n}\n\n/* Forms */\ninput {\n  margin: 1.2rem 0;\n}\n\n.form-text {\n  display: block;\n  margin-top: 0.3rem;\n  color: #888;\n}\n\ninput[type='text'],\ninput[type='email'],\ninput[type='password'],\ninput[type='date'],\nselect,\ntextarea {\n  display: block;\n  width: 100%;\n  padding: 0.4rem;\n  font-size: 1.2rem;\n  border: 1px solid #ccc;\n}\n\ninput[type='submit'],\nbutton {\n  font: inherit;\n}\n\ntable th,\ntable td {\n  padding: 1rem;\n  text-align: left;\n}\n\ntable th {\n  background: var(--light-color);\n}\n\n/* Navbar */\n.navbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0.7rem 2rem;\n  z-index: 1;\n  width: 100%;\n  opacity: 0.9;\n  margin-bottom: 1rem;\n}\n\n.navbar ul {\n  display: flex;\n}\n\n.navbar a {\n  color: #fff;\n  padding: 0.45rem;\n  margin: 0 0.25rem;\n}\n\n.navbar a:hover {\n  color: var(--light-color);\n}\n\n.navbar .welcome span {\n  margin-right: 0.6rem;\n}\n\n/* Mobile Styles */\n@media (max-width: 700px) {\n  .hide-sm {\n    display: none;\n  }\n\n  .grid-2,\n  .grid-3,\n  .grid-4 {\n    grid-template-columns: 1fr;\n  }\n\n  /* Text Styles */\n  .x-large {\n    font-size: 3rem;\n  }\n\n  .large {\n    font-size: 2rem;\n  }\n\n  .lead {\n    font-size: 1rem;\n  }\n\n  /* Navbar */\n  .navbar {\n    display: block;\n    text-align: center;\n  }\n\n  .navbar ul {\n    text-align: center;\n    justify-content: center;\n  }\n}\n", ""]);
+exports.push([module.i, "/* Global Styles */\n:root {\n  --primary-color: #3b8ea5;\n  --dark-color: #333333;\n  --light-color: #f4f4f4;\n  --danger-color: #dc3545;\n  --success-color: #28a745;\n}\n\n* {\n  box-sizing: border-box;\n  margin: 0;\n  padding: 0;\n}\n\nbody {\n  font-family: 'Roboto', sans-serif;\n  font-size: 1rem;\n  line-height: 1.6;\n  background-color: #fff;\n  color: #333;\n}\n\na {\n  color: var(--primary-color);\n  text-decoration: none;\n}\n\na:hover {\n  color: #666;\n}\n\nul {\n  list-style: none;\n}\n\nimg {\n  width: 100%;\n}\n\n\n/* Utilities */\n.container {\n  max-width: 1100px;\n  margin: auto;\n  overflow: hidden;\n  padding: 0 2rem;\n}\n\n/* Text Styles*/\n.x-large {\n  font-size: 4rem;\n  line-height: 1.2;\n  margin-bottom: 1rem;\n}\n\n.large {\n  font-size: 3rem;\n  line-height: 1.2;\n  margin-bottom: 1rem;\n}\n\n.lead {\n  font-size: 1.5rem;\n  margin-bottom: 1rem;\n}\n\n.text-center {\n  text-align: center;\n}\n\n.text-primary {\n  color: var(--primary-color);\n}\n\n.text-dark {\n  color: var(--dark-color);\n}\n\n.text-success {\n  color: var(--success-color);\n}\n\n.text-danger {\n  color: var(--danger-color);\n}\n\n.text-center {\n  text-align: center;\n}\n\n.text-right {\n  text-align: right;\n}\n\n.text-left {\n  text-align: left;\n}\n\n/* Center All */\n.all-center {\n  display: flex;\n  flex-direction: column;\n  width: 100%;\n  margin: auto;\n  justify-content: center;\n  align-items: center;\n  text-align: center;\n}\n\n/* Cards */\n.card {\n  padding: 1rem;\n  margin: 1.5rem 1rem;\n  border: #ccc 1px solid;\n  border-radius: 5px;\n  box-shadow: 15px 0px 10px -15px rgba(0, 0, 0, 0.5);\n  cursor: pointer;\n  transform-style: preserve-3d;\n  animation: fadeIn 1s ease;\n  transition: all 0.5s ease;\n}\n\n.card:hover {\n  box-shadow: 0px 15px 15px 4px rgba(0, 0, 0, 0.3);\n  transform: scale(1.05) translateY(-10px);\n  transition: all 0.3s ease;\n}\n\n@keyframes fadeIn {\n  0% {\n    transform: rotateY(90deg);\n    opacity: 0;\n  }\n  100% {\n    transform: rotateY(0deg);\n    opacity: 1;\n  }\n}\n\n.noData{\n  margin: 4rem 0px;\n  text-align: center;\n  transform-style: preserve-3d;\n  animation: fadeIn 1s ease;\n  transition: all 0.5s ease;\n}\n\n/* List */\n.list {\n  margin: 0.5rem 0;\n}\n\n.list li {\n  padding-bottom: 0.3rem;\n}\n\n/* Padding */\n.p {\n  padding: 0.5rem;\n}\n.p-1 {\n  padding: 1rem;\n}\n.p-2 {\n  padding: 2rem;\n}\n.p-3 {\n  padding: 3rem;\n}\n.py {\n  padding: 0.5rem 0;\n}\n.py-1 {\n  padding: 1rem 0;\n}\n.py-2 {\n  padding: 2rem 0;\n}\n.py-3 {\n  padding: 3rem 0;\n}\n\n/* Margin */\n.m {\n  margin: 0.5rem;\n}\n.m-1 {\n  margin: 1rem;\n}\n.m-2 {\n  margin: 2rem;\n}\n.m-3 {\n  margin: 3rem;\n}\n.my {\n  margin: 0.5rem 0;\n}\n.my-1 {\n  margin: 1rem 0;\n}\n.my-2 {\n  margin: 2rem 0;\n}\n.my-3 {\n  margin: 3rem 0;\n}\n\n/* Grid */\n.grid-2 {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  grid-gap: 1rem;\n}\n\n.grid-3 {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  grid-gap: 1rem;\n}\n\n.grid-4 {\n  display: grid;\n  grid-template-columns: repeat(4, 1fr);\n  grid-gap: 1rem;\n}\n\n.btn {\n  display: inline-block;\n  background: var(--light-color);\n  color: #333;\n  padding: 0.4rem 1.3rem;\n  font-size: 1rem;\n  border: none;\n  cursor: pointer;\n  margin-right: 0.5rem;\n  transition: opacity 0.2s ease-in;\n  outline: none;\n  border-radius: 5px;\n}\n\n.btn-link {\n  background: none;\n  padding: 0;\n  margin: 0;\n}\n\n.btn-block {\n  width: 15%;\n}\n\n.btn-sm {\n  font-size: 0.8rem;\n  padding: 0.3rem 1rem;\n  margin-right: 0.2rem;\n}\n\n.badge {\n  display: inline-block;\n  font-size: 0.8rem;\n  padding: 0.2rem 0.7rem;\n  text-align: center;\n  margin: 0.3rem;\n  background: var(--light-color);\n  color: #333;\n  border-radius: 5px;\n}\n\n.alert {\n  padding: 0.7rem;\n  margin: 1rem 0;\n  opacity: 0.9;\n  background: var(--light-color);\n  color: #333;\n}\n\n.btn-primary,\n.bg-primary,\n.badge-primary,\n.alert-primary {\n  background: var(--primary-color);\n  color: #fff;\n}\n\n.btn-light,\n.bg-light,\n.badge-light,\n.alert-light {\n  background: var(--light-color);\n  color: #333;\n}\n\n.btn-dark,\n.bg-dark,\n.badge-dark,\n.alert-dark {\n  background: var(--dark-color);\n  color: #fff;\n}\n\n.btn-danger,\n.bg-danger,\n.badge-danger,\n.alert-danger {\n  background: var(--danger-color);\n  color: #fff;\n}\n\n.btn-success,\n.bg-success,\n.badge-success,\n.alert-success {\n  background: var(--success-color);\n  color: #fff;\n}\n\n.btn-white,\n.bg-white,\n.badge-white,\n.alert-white {\n  background: #fff;\n  color: #333;\n  border: #ccc solid 1px;\n}\n\n.btn:hover {\n  opacity: 0.8;\n}\n\n.bg-light,\n.badge-light {\n  border: #ccc solid 1px;\n}\n\n.round-img {\n  border-radius: 50%;\n}\n\n/* Forms */\ninput {\n  margin: 1.2rem 0;\n}\n\n.form-text {\n  display: block;\n  margin-top: 0.3rem;\n  color: #888;\n}\n\ninput[type='text'],\nselect,\ntextarea {\n  width: 82%;\n  padding: 0.4rem;\n  font-size: 1.2rem;\n  border: 1px solid #ccc;\n  margin: 1.2rem 15px 1.2rem 0;\n}\n\ninput[type='submit'],\nbutton {\n  font: inherit;\n}\n\ntable th,\ntable td {\n  padding: 1rem;\n  text-align: left;\n}\n\ntable th {\n  background: var(--light-color);\n}\n\n/* Navbar */\n.navbar {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  padding: 0.7rem 2rem;\n  z-index: 1;\n  width: 100%;\n  opacity: 0.9;\n  margin-bottom: 1rem;\n}\n\n.navbar ul {\n  display: flex;\n}\n\n.navbar a {\n  color: #fff;\n  padding: 0.45rem;\n  margin: 0 0.25rem;\n}\n\n.navbar a:hover {\n  color: var(--light-color);\n}\n\n.navbar .welcome span {\n  margin-right: 0.6rem;\n}\n\n/* Mobile Styles */\n@media (max-width: 882px){\n  input[type='text'],\n  select,\n  textarea {\n    width: 70%;\n  }\n\n  .btn-block {\n    width: 25%;\n  }\n}\n\n@media (max-width: 700px) {\n  .hide-sm {\n    display: none;\n  }\n\n  .grid-2,\n  .grid-3,\n  .grid-4 {\n    grid-template-columns: 1fr;\n  }\n\n  input[type='text'],\n  select,\n  textarea {\n    display: block;\n    width: 100% !important;\n  }\n\n  .btn-block {\n    display: block;\n    width: 100% !important;\n  }\n\n  /* Text Styles */\n  .x-large {\n    font-size: 3rem;\n  }\n\n  .large {\n    font-size: 2rem;\n  }\n\n  .lead {\n    font-size: 1rem;\n  }\n\n  /* Navbar */\n  .navbar {\n    display: block;\n    text-align: center;\n  }\n\n  .navbar ul {\n    text-align: center;\n    justify-content: center;\n  }\n}\n\n", ""]);
 // Exports
 module.exports = exports;
 
