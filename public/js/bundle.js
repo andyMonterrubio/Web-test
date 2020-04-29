@@ -623,11 +623,27 @@ var App = function App() {
         items = _useState4[0],
         setItems = _useState4[1];
 
+    function compare(a, b) {
+        // Use toUpperCase() to ignore character casing
+        var A = a.name.toUpperCase();
+        var B = b.name.toUpperCase();
+
+        var comparison = 0;
+        if (A > B) {
+            comparison = 1;
+        } else if (A < B) {
+            comparison = -1;
+        }
+        return comparison;
+    }
+
     var searchItems = function searchItems(text) {
         console.log(text);
         setLoading(true);
         _superagent2.default.get('http://localhost:3000/api/search/' + text).end(function (err, res) {
             var items = res.body;
+            console.log(items);
+            items = items.sort(compare);
             console.log(items);
             setItems(items);
             setLoading(false);
@@ -1506,7 +1522,7 @@ var Item = function Item(_ref) {
         _react2.default.createElement('img', { src: type, alt: '', className: 'round-img', style: { width: '60px' } }),
         _react2.default.createElement(
             'h3',
-            null,
+            { style: { marginBottom: '15px' } },
             name
         ),
         _react2.default.createElement('img', { src: img, alt: '', style: { width: '60px' } })
