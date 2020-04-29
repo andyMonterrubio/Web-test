@@ -8,9 +8,7 @@ const Item = ({item:  { name, type, img }}) => {
             <img src={type} alt="" className="round-img" style={{ width: '60px' }} /> 
             <h3>{name}</h3>
 
-            <div>
-            <img src={img} alt="" className="round-img" style={{ width: '60px' }} /> 
-            </div>
+            <img src={img} alt="" style={{ width: '60px' }} /> 
         </div>
     )
 }

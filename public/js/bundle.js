@@ -1509,11 +1509,7 @@ var Item = function Item(_ref) {
             null,
             name
         ),
-        _react2.default.createElement(
-            'div',
-            null,
-            _react2.default.createElement('img', { src: img, alt: '', className: 'round-img', style: { width: '60px' } })
-        )
+        _react2.default.createElement('img', { src: img, alt: '', style: { width: '60px' } })
     );
 };
 
