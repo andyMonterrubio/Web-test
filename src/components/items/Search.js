@@ -1,29 +1,25 @@
-import React,  { Component } from 'react'
-import PropTypes from 'prop-types';
+import React,  { useState } from 'react'
 
-class Search extends Component {
-    state = {
-        text: ''
-    }
+const Search =  props => {
+    const [text, setText] = useState('')
 
-    onChange = e => this.setState({ [e.target.name]: e.target.value });
+    const  onChange = e => setText(e.target.value);
 
-    onSubmit = e => {
+    const onSubmit = e => {
         e.preventDefault();
-        console.log(this.state.text)
+        props.searchItems(text);
+        setText('');
     }
 
-    render() {
-        return(
-            <div>
-                <form onSubmit={this.onSubmit} className="form">
-                    <input type="text" name="text" placeholder="Search Element..." value={this.state.text} 
-                    onChange={this.onChange} />
-                    <input type="submit" value="Search" className="btn btn-dark btn-block" />
-                </form>
-            </div>
-        )
-    }
+    return(
+        <div>
+            <form onSubmit={onSubmit} className="form">
+                <input type="text" name="text" placeholder="Search Element..." value={text} 
+                onChange={onChange} />
+                <input type="submit" value="Search" className="btn btn-dark btn-block" />
+            </form>
+        </div>
+    )
 }
 
 export default Search
